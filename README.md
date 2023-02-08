@@ -13,6 +13,7 @@ Inject takes two arguments, the first stating location of data to encode, and th
 ## References
 - Shell Script (https://www.shellscript.sh/)
 - Exiftool (https://exiftool.org/)
+- "Everything You Ever Wanted to Know about ExifTool" (https://adamtheautomator.com/exiftool/)
 
 :octocat:
 
