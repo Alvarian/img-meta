@@ -1,6 +1,10 @@
 #! /usr/bin/bash
 
 ARG_QN=$#
+GREEN='\033[0;32m'
+RED='\033[0;31m'
+ORANGE='\033[0;33m'
+NC='\033[0m'
 
 
 function get_value() {
@@ -24,26 +28,20 @@ TARGET="DISTRIB_DESCRIPTION"
 OS=$(get_value "${PROFILE[@]}" "$TARGET")
 
 if ! [[ "$OS" == "Manjaro" || "$OS" == "Arch" ]]; then
-  echo 'OS must be Arch linux or Manjaro'
+  echo -e "${RED}OS must be Arch linux or Manjaro"${NC}
 fi
 
 function extract() {
   function extract_into_json() {
     ENCODED=$(exiftool -a -r -G1 -s $1 | awk '/Certificate/ {print $4}' | base64 -d)
 
-    echo $ENCODED 
+    echo -e "${GREEN}$ENCODED${NC}" 
 
     echo $ENCODED > meta_extract.txt
   }
 
-  if [ $# -gt 1 ]; then
-    echo "Only one argument is required. $ARG_QN was given."
-
-    exit 2
-  fi
-
-  if [ -z $1 ]; then
-    echo 'Missing location of image as argument.'
+  if [ ! -f $1 ]; then
+    echo -e "${RED}Wrong location of image as argument.${NC}"
     
     exit 2
   fi
@@ -51,7 +49,7 @@ function extract() {
   if pacman -Qi "perl-image-exiftool" > /dev/null; then
     extract_into_json $1
   else
-    echo 'downloading exiftool...'
+    echo -e "${GREEN}downloading exiftool...${NC}"
     pacman -S "perl-image-exiftool" && extract_into_json $1  
   fi
 }
@@ -61,7 +59,8 @@ function inject() {
   IFS= read -r -p "> " data
 
   if [ -z "$data" ]; then
-    echo "Data given was empty. Exiting program."
+    reset
+    echo -e "${ORANGE}Data given was empty. Exiting program.${NC}"
 
     exit 2
   fi
@@ -70,17 +69,15 @@ function inject() {
     FILE_TYPE="`file -b "$data"`"
 
     exiftool -Certificate=$(cat $data > /dev/null | base64 | tr -d '\n') $1 
-    echo "$FILE_TYPE content injected into $1"
+    echo -e "${GREEN}$FILE_TYPE content injected into $1${NC}"
   else
     exiftool -Certificate=$(echo "$data" | base64) $1
 
-    echo "text injected into $1"
+    echo -e "${GREEN}text injected into $1${NC}"
   fi
 }
 
 function start() {
-  reset
-
   echo "Would you like to extract(1), inject(2), or read all meta(3) data from an image?"
   read -r -p "> " choice
 
@@ -94,16 +91,15 @@ function start() {
     reset
     exiftool $1
   else
-    echo "No match for input: $choice"
-    reset
-    start
+    echo -e "${RED}No match for input: $choice${NC}"
   fi
 }
 
-if [ $# -gt 1 ]; then
-  echo "Must have one argument of location of image. $# args was given."
+if [ ! $# -eq 1 ]; then
+  echo -e "${RED}Must have one argument of location of image. $# args was given.${NC}"
 
   exit 2
 fi
 
+reset
 start $1
