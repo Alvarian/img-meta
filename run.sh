@@ -40,7 +40,7 @@ function extract() {
 
   ENCODED=$(exiftool -a -r -G1 -s $1 | awk '/Certificate/ {print $4}' | base64 -d)
 
-  echo -e "${GREEN}$ENCODED${NC}" 
+  echo -e "${GREEN} $ENCODED ${NC}" 
 
   echo $ENCODED > meta_extract.txt
 }
@@ -59,7 +59,7 @@ function inject() {
   if cat "$data" 2>/dev/null; then
     FILE_TYPE="`file -b "$data"`"
 
-    exiftool -Certificate=$(cat $data > /dev/null | base64 | tr -d '\n') $1 
+    exiftool -Certificate=$(cat $data 2>/dev/null | base64 | tr -d '\n') $1 
     echo -e "${GREEN}$FILE_TYPE content injected into $1${NC}"
   else
     exiftool -Certificate=$(echo "$data" | base64) $1
