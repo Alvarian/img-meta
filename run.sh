@@ -32,26 +32,17 @@ if ! [[ "$OS" == "Manjaro" || "$OS" == "Arch" ]]; then
 fi
 
 function extract() {
-  function extract_into_json() {
-    ENCODED=$(exiftool -a -r -G1 -s $1 | awk '/Certificate/ {print $4}' | base64 -d)
-
-    echo -e "${GREEN}$ENCODED${NC}" 
-
-    echo $ENCODED > meta_extract.txt
-  }
-
   if [ ! -f $1 ]; then
     echo -e "${RED}Wrong location of image as argument.${NC}"
     
     exit 2
   fi
 
-  if pacman -Qi "perl-image-exiftool" > /dev/null; then
-    extract_into_json $1
-  else
-    echo -e "${GREEN}downloading exiftool...${NC}"
-    pacman -S "perl-image-exiftool" && extract_into_json $1  
-  fi
+  ENCODED=$(exiftool -a -r -G1 -s $1 | awk '/Certificate/ {print $4}' | base64 -d)
+
+  echo -e "${GREEN}$ENCODED${NC}" 
+
+  echo $ENCODED > meta_extract.txt
 }
 
 function inject() {
@@ -99,6 +90,11 @@ if [ ! $# -eq 1 ]; then
   echo -e "${RED}Must have one argument of location of image. $# args was given.${NC}"
 
   exit 2
+fi
+
+if ! pacman -Qi "perl-image-exiftool" > /dev/null; then
+  echo -e "${GREEN}downloading exiftool...${NC}"
+  pacman -S "perl-image-exiftool" 
 fi
 
 reset
