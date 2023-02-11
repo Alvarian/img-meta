@@ -81,7 +81,7 @@ function inject() {
 function start() {
   reset
 
-  echo "Would you like to extract(1) or inject(2) data from an image?"
+  echo "Would you like to extract(1), inject(2), or read all meta(3) data from an image?"
   read -r -p "> " choice
 
   if [ $choice == "1" ]; then
@@ -90,6 +90,9 @@ function start() {
   elif [ $choice == "2" ]; then
     reset
     inject $1
+  elif [ $choice == "3" ]; then
+    reset
+    exiftool $1
   else
     echo "No match for input: $choice"
     reset
