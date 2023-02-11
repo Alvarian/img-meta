@@ -1,14 +1,19 @@
 ![Shell Script](https://img.shields.io/badge/shell_script-%23121011.svg?style=for-the-badge&logo=gnu-bash&logoColor=white)
-![Linux](https://img.shields.io/badge/Linux-FCC624?style=for-the-badge&logo=linux&logoColor=black)
+![Arch](https://img.shields.io/badge/Arch%20Linux-1793D1?logo=arch-linux&logoColor=fff&style=for-the-badge)
+![Manjaro](https://img.shields.io/badge/Manjaro-35BF5C?style=for-the-badge&logo=Manjaro&logoColor=white)
 ***
 
 # Introduction
-A small script that encrypts strings as meta data in a selected image.
+A small UI script, with the use of exiftool, that can extract, inject, and read all meta data from an image.
+
+## Getting Started
+Run:
+```
+sudo ./run.sh <LOCATION OF IMAGE>
+```
 
 ## Usage
-Extract takes one argument, stating location of media to read and decode meta data
-
-Inject takes two arguments, the first stating location of data to encode, and the second the location of the media to store newly encode meta data
+Injection takes only two types of payloads. The first can be raw input through the terminal, or the second is a location of a text file.
 
 ## References
 - Shell Script (https://www.shellscript.sh/)
