@@ -1,1 +1,3 @@
-meta.json
+meta_extract.txt
+*.jpg_original
+*.png_original
